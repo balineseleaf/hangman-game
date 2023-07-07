@@ -21,4 +21,4 @@ export const WORDS = [
   "programming",
 ];
 
-export const KEYBOARD_LETTERS = Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ"); // массив из букв
+export const KEYBOARD_LETTERS = Array.from("QWERTYUIOPASDFGHJKLZXCVBNM"); // массив из букв
