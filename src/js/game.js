@@ -10,11 +10,23 @@ const createPlaceholderHTML = () => {
   //1 вариант
   const wordArrow = Array.from(word); // массив букв через запятую
   const placeholderHTML = wordArrow.reduce((acc, curr, i) => {
-    return acc + `<p id="letter_${i}" class="letter"> _ </p>`; // чисто + строка -> будет строка
-  }, "");
-  return `<div id="placeholders" class="placeholders-wrapper">${placeholderHTML}</div>`; //вернем наше итоговое слово с черточками
+    return acc + `<p id="letter_${i}" class="letter"> _ </p>`; // чисто + строка -> будет строка - важно
+  }, ""); // надо сделать первый эл-т пустую строку, чтобы туда попала " _ "  , а не буква
+  return `<div id="placeholders" class="placeholders-wrapper">${placeholderHTML}</div>`; //вернем наше итоговое слово без букв, но с черточками
   //равными кол-ву букв в слове
 };
+
+//2 вариант
+// const placarholderArray = Array.from('_'.repeat(word.length));
+// const placeholderHTML = placarholderArray.reduce((acc, curr, i) => {
+//     return acc + `<p id="letter_${i}" class="letter"> ${curr} </p>`;
+// }, '')
+
+//3 вариант
+// let placeholderHTML = ''; //аккумулятор для составления слова
+// for (let i = 0; i < word.length; i++) {
+//     placeholderHTML = placeholderHTML + `<p id="letter_${i}" class="letter"> _ </p>` //буква с уникальным айдишником.
+// }
 
 const createKeyboard = () => {
   const keyboard = document.createElement("div"); // создали блок div
@@ -22,23 +34,22 @@ const createKeyboard = () => {
   keyboard.id = "keyboard";
 
   const keyboardHTML = KEYBOARD_LETTERS.reduce((acc, curr, i) => {
-    // пробегаем по массиву алфавита
+    // пробегаем по массиву алфавита и на каждую букву рисуем кнопку с таким же значением внутри (curr)
     return (
       acc +
       `<button id="${curr}" class="button-primary keyboard-button">${curr}</button>`
     );
   }, "");
-  keyboard.innerHTML = keyboardHTML; // закинули содержимое в блок div
-  return keyboard; // вернули
+  keyboard.innerHTML = keyboardHTML; // закинули содержимое  с нашей клавой в блок div, ранее созданный
+  return keyboard; // вернули наш блок див заполненный
 };
 
 const createHangmanImg = () => {
-  const image = document.createElement("img"); // создаем тег img с атрибутами
+  const image = document.createElement("img"); // создаем тег img с атрибутами(ниже)
   image.src = "images/hg-0.png";
   image.alt = "hangman image";
   image.classList.add("hangman-img");
   image.id = "hangman-img";
-
   return image;
 };
 
@@ -73,17 +84,6 @@ const checkLetter = (letter) => {
     });
   }
 };
-//2 вариант
-// const placarholderArray = Array.from('_'.repeat(word.length));
-// const placeholderHTML = placarholderArray.reduce((acc, curr, i) => {
-//     return acc + `<p id="letter_${i}" class="letter"> ${curr} </p>`;
-// }, '')
-
-//3 вариант
-// let placeholderHTML = ''; //аккумулятор для составления слова
-// for (let i = 0; i < word.length; i++) {
-//     placeholderHTML = placeholderHTML + `<p id="letter_${i}" class="letter"> _ </p>` //буква с уникальным айдишником.
-// }
 
 const stopGame = (status) => {
   document.getElementById("keyboard").remove();
@@ -126,7 +126,7 @@ export const startGame = () => {
     if (event.target.tagName.toLowerCase() === "button") {
       // чтобы не было клика по диву, между кнопками на экране
       event.target.disabled = true;
-      checkLetter(event.target.id); // чекаем букву
+      checkLetter(event.target.id); // чекаем букву и передаем в функцию проверки буквы
     }
   });
 
@@ -143,7 +143,7 @@ export const startGame = () => {
   document.getElementById("quit").onclick = () => {
     const isSure = confirm("Are you sure you want to quit and lose progress");
     if (isSure) {
-      stopGame("quit"); // если не сделать стрелочную, то игра будет всегда перезагужаться со статусом quit
+      stopGame("quit"); // если не сделать стрелочную, то игра будет всегда перезагружаться со статусом quit
     }
   };
 };
